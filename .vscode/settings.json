@@ -10,5 +10,10 @@
   },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#342D10",
+    "titleBar.activeBackground": "#493F17",
+    "titleBar.activeForeground": "#FCFBF5"
   }
 }

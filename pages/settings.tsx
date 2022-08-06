@@ -2,19 +2,19 @@ import React from 'react';
 import Head from 'next/head';
 import { Center, Heading } from '@chakra-ui/react';
 
-function Home() {
+function SettingsPage() {
   return (
     <>
       <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Settings</title>
       </Head>
+      <Center></Center>
 
       <Center>
-        <Heading size="lg">I am home page!</Heading>
+        <Heading size="lg">I am SETTINGS page</Heading>
       </Center>
     </>
   );
 }
 
-export default Home;
+export default SettingsPage;

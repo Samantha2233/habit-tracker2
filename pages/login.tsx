@@ -10,7 +10,6 @@ function LoginPage() {
       <Head>
         <title>LoginPage</title>
       </Head>
-
       <CenteredBoxForm>
         <LoginForm />
       </CenteredBoxForm>
