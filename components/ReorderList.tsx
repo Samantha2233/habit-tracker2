@@ -8,7 +8,6 @@ import { getHabitPattern } from '@/utils/moment-recur';
 
 export function ReorderList(props: any) {
   const dateSelected = useDateStore((state) => state.dateSelected);
-  console.log('props', props);
   // How should I order by time of day and display time of day headers above?
 
   return (

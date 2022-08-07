@@ -2,7 +2,6 @@ import create from 'zustand';
 import moment from 'moment';
 
 const today = moment().format('MMDDYYYY');
-console.log('today', today);
 
 interface State {
   dateSelected: string;

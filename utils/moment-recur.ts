@@ -14,7 +14,6 @@ export const getHabitPattern = (recurrence: any, createdAt: string) => {
 
     // DAYS OF THE WEEK
   } else if (recurrence.daysOfWeek?.length) {
-    console.log('recurrence', recurrence);
     const pattern = fromStart.recur().every(recurrence.daysOfWeek).daysOfWeek();
     recurPattern = pattern;
 
