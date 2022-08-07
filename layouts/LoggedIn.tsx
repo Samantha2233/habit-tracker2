@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
 
+import { useHabitsQuery } from '@/types';
 import { Logo } from '@/components/Logo';
 import { GlobalLeftNav } from '@/components/GlobalLeftNav/GlobalLetNav';
 import { CreateHabitModal } from '@/components/CreateHabitModal';
@@ -16,6 +17,7 @@ export function LoggedInLayout({ children }: Props) {
   const { logout } = useAuth();
   const router = useRouter();
   const createHabitModal = useDisclosure();
+  const { refetch } = useHabitsQuery();
 
   async function handleLogout() {
     logout();
@@ -64,7 +66,7 @@ export function LoggedInLayout({ children }: Props) {
 
             <CreateHabitModal
               onClose={() => {
-                // refetch();
+                refetch();
                 createHabitModal.onClose();
               }}
               isOpen={createHabitModal.isOpen}
