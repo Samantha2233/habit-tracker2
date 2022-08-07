@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Tabs, Tab, TabList, TabPanel, TabPanels } from '@chakra-ui/react';
 
+import { getColorName } from '@/utils/getColorName';
 interface Props {
   setRecurrence: any;
+  recurrence: any;
+  color: string;
 }
 
-export function RecurrenceForm({ setRecurrence }: Props) {
-  const [daysOfWeek, setDaysOfWeek] = useState(['sunday']);
-  const [daysOfMonth, setDaysOfMonth] = useState([1]);
-  const [timesPerWeek, setTimesPerWeek] = useState(1);
+export function RecurrenceForm({ setRecurrence, recurrence, color = 'orange' }: Props) {
+  const [tabIndex, setTabIndex] = useState(0);
+  const [daysOfWeek, setDaysOfWeek] = useState(['']);
+  const [daysOfMonth, setDaysOfMonth] = useState([0]);
+  const [timesPerWeek, setTimesPerWeek] = useState(0);
+
+  useEffect(() => {
+    if (recurrence) {
+      if (recurrence.daysOfWeek) {
+        setDaysOfWeek(recurrence.daysOfWeek);
+        setTabIndex(0);
+      } else if (recurrence.daysOfMonth) {
+        setDaysOfMonth(recurrence.daysOfMonth);
+        setTabIndex(2);
+      } else if (recurrence.timesPerWeek) {
+        setTimesPerWeek(recurrence.timesPerWeek);
+        setTabIndex(1);
+      }
+    }
+  }, [recurrence]);
+
+  useEffect(() => {
+    if (tabIndex === 0) {
+      setRecurrence({
+        timesPerWeek: timesPerWeek,
+      });
+
+      setRecurrence({ daysOfWeek: daysOfWeek });
+    } else if (tabIndex === 1) {
+      setRecurrence({
+        timesPerWeek: timesPerWeek,
+      });
+    } else if (tabIndex === 2) {
+      setRecurrence({ daysOfMonth: daysOfMonth });
+    }
+  }, [tabIndex, setRecurrence, daysOfWeek, timesPerWeek, daysOfMonth]);
 
   const adjustDaysOfWeek = (day: string) => {
-    setDaysOfMonth([]);
-    setTimesPerWeek(0);
     setDaysOfWeek((old) => {
       if (old.includes(day)) {
         return old.filter((d: string) => d !== day);
@@ -20,15 +53,9 @@ export function RecurrenceForm({ setRecurrence }: Props) {
         return [...old, day];
       }
     });
-
-    setRecurrence({
-      daysOfWeek: daysOfWeek,
-    });
   };
 
   const adjustDaysOfMonth = (day: number) => {
-    setDaysOfWeek([]);
-    setTimesPerWeek(0);
     setDaysOfMonth((old) => {
       if (old.includes(day)) {
         return old.filter((d: number) => d !== day);
@@ -36,17 +63,10 @@ export function RecurrenceForm({ setRecurrence }: Props) {
         return [...old, day];
       }
     });
-
-    setRecurrence({
-      daysOfMonth: daysOfMonth,
-    });
   };
 
   const adjustTimesPerWeek = (times: number) => {
-    setDaysOfWeek([]);
-    setDaysOfMonth([]);
     setTimesPerWeek(times);
-
     setRecurrence({
       timesPerWeek: timesPerWeek,
     });
@@ -55,25 +75,30 @@ export function RecurrenceForm({ setRecurrence }: Props) {
   return (
     <Box pt="20px">
       {/* Daily, Weekly or Monthly */}
-      <Tabs variant="soft-rounded" colorScheme="orange">
-        <TabList display="flex" justifyContent="space-around" W="100%">
+      <Tabs
+        index={tabIndex}
+        variant="soft-rounded"
+        colorScheme={getColorName(color)}
+        onChange={(index) => setTabIndex(index)}
+      >
+        <TabList display="flex" justifyContent="space-around" w="100%">
           <Tab
             _hover={{
-              backgroundColor: 'orange.100',
+              backgroundColor: `${getColorName(color)}.100`,
             }}
           >
             Daily
           </Tab>
           <Tab
             _hover={{
-              backgroundColor: 'orange.100',
+              backgroundColor: `${getColorName(color)}.100`,
             }}
           >
             Weekly
           </Tab>
           <Tab
             _hover={{
-              backgroundColor: 'orange.100',
+              backgroundColor: `${getColorName(color)}.100`,
             }}
           >
             Monthly
@@ -84,9 +109,10 @@ export function RecurrenceForm({ setRecurrence }: Props) {
             {daysOfTheWeek.map((day) => {
               return (
                 <Button
-                  colorScheme="orange"
-                  bg={daysOfWeek.includes(day.value) ? 'orange.500' : 'white'}
-                  border={'1px solid orange'}
+                  key={`${day.value}-of-the-week`}
+                  colorScheme={`${getColorName(color)}`}
+                  bg={daysOfWeek.includes(day.value) ? `${getColorName(color)}.500` : 'white'}
+                  border={`1px solid ${getColorName(color)}`}
                   color={daysOfWeek.includes(day.value) ? 'white' : 'black'}
                   boxShadow={daysOfWeek.includes(day.value) ? 'xl' : 'sm'}
                   borderRadius="20px"
@@ -95,7 +121,9 @@ export function RecurrenceForm({ setRecurrence }: Props) {
                   w="40px"
                   onClick={() => adjustDaysOfWeek(day.value)}
                   _hover={{
-                    backgroundColor: daysOfWeek.includes(day.value) ? 'orange.500' : 'orange.100',
+                    backgroundColor: daysOfWeek.includes(day.value)
+                      ? `${getColorName(color)}.500`
+                      : `${getColorName(color)}.100`,
                   }}
                 >
                   {day.title}
@@ -108,9 +136,10 @@ export function RecurrenceForm({ setRecurrence }: Props) {
               <Box w="93%">
                 {Array.from(Array(7).keys()).map((day) => (
                   <Button
-                    colorScheme="orange"
-                    bg={timesPerWeek === day + 1 ? 'orange.500' : 'white'}
-                    border={'1px solid orange'}
+                    key={`${day}s-per-week`}
+                    colorScheme={`${getColorName(color)}`}
+                    bg={timesPerWeek === day + 1 ? `${getColorName(color)}.500` : 'white'}
+                    border={`1px solid ${getColorName(color)}`}
                     color={timesPerWeek === day + 1 ? 'white' : 'black'}
                     borderRadius="20px"
                     margin={1}
@@ -118,7 +147,10 @@ export function RecurrenceForm({ setRecurrence }: Props) {
                     w="40px"
                     onClick={() => adjustTimesPerWeek(day + 1)}
                     _hover={{
-                      backgroundColor: timesPerWeek === day + 1 ? 'orange.500' : 'orange.100',
+                      backgroundColor:
+                        timesPerWeek === day + 1
+                          ? `${getColorName(color)}.500`
+                          : `${getColorName(color)}.100`,
                     }}
                   >
                     {day + 1}
@@ -132,9 +164,10 @@ export function RecurrenceForm({ setRecurrence }: Props) {
               <Box w="93%">
                 {Array.from(Array(31).keys()).map((day) => (
                   <Button
-                    colorScheme="orange"
-                    bg={daysOfMonth.includes(day + 1) ? 'orange.500' : 'white'}
-                    border={'1px solid orange'}
+                    key={day}
+                    colorScheme={`${getColorName(color)}`}
+                    bg={daysOfMonth.includes(day + 1) ? `${getColorName(color)}.500` : 'white'}
+                    border={`1px solid ${getColorName(color)}`}
                     color={daysOfMonth.includes(day + 1) ? 'white' : 'black'}
                     borderRadius="20px"
                     margin={1}
@@ -142,7 +175,9 @@ export function RecurrenceForm({ setRecurrence }: Props) {
                     w="40px"
                     onClick={() => adjustDaysOfMonth(day + 1)}
                     _hover={{
-                      backgroundColor: daysOfMonth.includes(day + 1) ? 'orange.500' : 'orange.100',
+                      backgroundColor: daysOfMonth.includes(day + 1)
+                        ? `${getColorName(color)}.500`
+                        : `${getColorName(color)}.100`,
                     }}
                   >
                     {day + 1}

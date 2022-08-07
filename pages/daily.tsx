@@ -13,6 +13,7 @@ import { HabitCard } from '@/components/HabitCard';
 function DailyPage() {
   const dateSelected = useDateStore((state) => state.dateSelected);
 
+  // const GET_HABITS =
   gql`
     query habits {
       habits {
@@ -23,6 +24,7 @@ function DailyPage() {
         icon
         recurrence
         timeOfDay
+        totalComplete
         createdAt
       }
     }
