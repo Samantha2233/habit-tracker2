@@ -1,6 +1,17 @@
 import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
+  styles: {
+    global: {
+      label: {
+        textTransform: 'uppercase',
+        fontSize: '12px !important',
+        marginBottom: '2px !important',
+        color: '#718096',
+        letterSpacing: '1.5px',
+      },
+    },
+  },
   colors: {
     transparent: 'transparent',
     current: 'currentColor',
@@ -161,11 +172,6 @@ const theme = extendTheme({
       700: '#97266D',
       800: '#702459',
       900: '#521B41',
-    },
-  },
-  styles: {
-    global: {
-      // insert any necessary global styles here
     },
   },
 });
