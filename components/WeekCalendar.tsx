@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { Button, VStack, Flex, Text } from '@chakra-ui/react';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 import { useDateStore } from '@/store';
 
@@ -9,7 +10,7 @@ export const WeekCalendar = () => {
   const setDateSelected = useDateStore((state) => state.setDateSelected);
 
   // Build Calendar
-  const startDay = moment().startOf('week');
+  const [startDay, setStartDay] = useState(moment().startOf('week'));
   let weekCalendar: any = [];
 
   for (let idx = 0; idx < 7; idx++) {
@@ -18,7 +19,18 @@ export const WeekCalendar = () => {
   }
 
   return (
-    <Flex justifyContent="space-between" bg="orange.50">
+    <Flex justifyContent="space-between" bg="orange.50" alignItems="center">
+      <Button
+        bg="transparent"
+        p={0}
+        _hover={{ color: 'orange' }}
+        onClick={() => {
+          setStartDay(moment(startDay).subtract(7, 'days'));
+          setDateSelected(moment(startDay).subtract(7, 'days').format('MMDDYYYY'));
+        }}
+      >
+        <MdChevronLeft fontSize="22px" />
+      </Button>
       {weekCalendar.map((day: any, idx: any) => {
         const isSelected = day.format('MMDDYYYY') === dateSelected;
 
@@ -46,6 +58,18 @@ export const WeekCalendar = () => {
           </Button>
         );
       })}
+      <Button
+        bg="transparent"
+        p={0}
+        _hover={{ color: 'orange' }}
+        _focus={{ bg: 'transparent' }}
+        onClick={() => {
+          setStartDay(moment(startDay).add(7, 'days'));
+          setDateSelected(moment(startDay).add(7, 'days').format('MMDDYYYY'));
+        }}
+      >
+        <MdChevronRight fontSize="22px" />
+      </Button>
     </Flex>
   );
 };
