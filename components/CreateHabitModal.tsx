@@ -8,6 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { gql } from '@apollo/client';
+import moment from 'moment';
 
 import { useCreateHabitMutation, HabitInput } from '../types';
 
@@ -22,6 +23,7 @@ export const CREATE_HABIT_MUTATION = gql`
       description
       icon
       color
+      date
       recurrence
       totalComplete
     }
@@ -53,6 +55,7 @@ export function CreateHabitModal({ onClose, isOpen }: CreateHabitModalProps) {
               description: data.description,
               icon: data.icon,
               color: color,
+              date: Object.keys(recurrence).length ? null : moment(data.date).toISOString(),
               recurrence: recurrence,
               timeOfDay: data.timeOfDay,
               totalComplete: data.totalComplete,

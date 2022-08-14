@@ -10,9 +10,23 @@ interface Props {
 
 export function RecurrenceForm({ setRecurrence, recurrence, color = 'orange' }: Props) {
   const [tabIndex, setTabIndex] = useState(0);
-  const [daysOfWeek, setDaysOfWeek] = useState(['']);
-  const [daysOfMonth, setDaysOfMonth] = useState([0]);
+
+  const [daysOfWeek, setDaysOfWeek] = useState([
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ]);
+
+  const [daysOfMonth, setDaysOfMonth] = useState([1]);
   const [timesPerWeek, setTimesPerWeek] = useState(0);
+
+  useEffect(() => {
+    setRecurrence({ daysOfWeek: daysOfWeek });
+  });
 
   useEffect(() => {
     if (recurrence) {
@@ -31,10 +45,6 @@ export function RecurrenceForm({ setRecurrence, recurrence, color = 'orange' }: 
 
   useEffect(() => {
     if (tabIndex === 0) {
-      setRecurrence({
-        timesPerWeek: timesPerWeek,
-      });
-
       setRecurrence({ daysOfWeek: daysOfWeek });
     } else if (tabIndex === 1) {
       setRecurrence({

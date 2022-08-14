@@ -14,6 +14,7 @@ export const Habit = objectType({
     t.nonNull.string('icon');
     t.nonNull.string('color');
     t.nonNull.string('timeOfDay');
+    t.date('date');
     t.nonNull.json('recurrence');
     // t.nonNull.int('streak');
     t.nonNull.int('totalComplete');
@@ -97,20 +98,21 @@ export const updateHabitMutation = mutationField('updateHabit', {
 });
 
 // MUTATION INPUTS
-export const CreateHabitInput = inputObjectType({
-  name: 'CreateHabitInput',
-  description: 'Input used to create a habit',
-  definition: (t) => {
-    t.nonNull.string('userId');
-    t.nonNull.string('name');
-    t.string('description');
-    t.nonNull.string('icon');
-    t.nonNull.string('color');
-    t.nonNull.json('recurrence');
-    t.nonNull.string('timeOfDay');
-    t.nonNull.int('totalComplete');
-  },
-});
+// export const CreateHabitInput = inputObjectType({
+//   name: 'CreateHabitInput',
+//   description: 'Input used to create a habit',
+//   definition: (t) => {
+//     t.nonNull.string('userId');
+//     t.nonNull.string('name');
+//     t.string('description');
+//     t.nonNull.string('icon');
+//     t.nonNull.string('color');
+//     t.nonNull.json('recurrence');
+//     t.date('date');
+//     t.nonNull.string('timeOfDay');
+//     t.nonNull.int('totalComplete');
+//   },
+// });
 
 export const UpdateHabitInput = inputObjectType({
   name: 'UpdateHabitInput',
@@ -120,6 +122,7 @@ export const UpdateHabitInput = inputObjectType({
     t.string('description');
     t.nonNull.string('icon');
     t.nonNull.string('color');
+    t.date('date');
     t.nonNull.json('recurrence');
     t.nonNull.string('timeOfDay');
     t.nonNull.int('totalComplete');
@@ -163,6 +166,7 @@ export const HabitInput = inputObjectType({
     t.string('description');
     t.nonNull.string('icon');
     t.nonNull.string('color');
+    t.date('date');
     t.nonNull.json('recurrence');
     t.nonNull.string('timeOfDay');
     t.nonNull.int('totalComplete');

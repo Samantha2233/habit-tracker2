@@ -24,6 +24,7 @@ function DailyPage() {
         icon
         recurrence
         timeOfDay
+        date
         totalComplete
         createdAt
       }

@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { TwitterPicker } from 'react-color';
+import moment from 'moment';
 
 import { HabitInput } from '../types';
 
@@ -34,7 +35,7 @@ export interface HabitFormProps {
 /** Description of component */
 export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: HabitFormProps) {
   const [icon] = useState('kitty');
-  const [repeat, setRepeat] = useState(habit ? Object.keys(habit.recurrence).length > 0 : false);
+  const [repeat, setRepeat] = useState(true);
 
   const { register, handleSubmit, getValues } = useForm<HabitInput>({
     defaultValues: {
@@ -42,6 +43,9 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
       description: habit ? habit.description : '',
       icon: habit ? habit.icon : '',
       timeOfDay: habit ? habit.timeOfDay : 'anytime',
+      date: habit
+        ? habit.date && moment(habit.date).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD'),
       totalComplete: habit ? habit.totalComplete : 0,
     },
   });
@@ -50,6 +54,10 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
     // If were rendering this form from UpdateHabitModal & already have a habit
     if (habit) {
       setColor(habit.color);
+
+      if (habit.recurrence?.length > 0) {
+        setRepeat(true);
+      }
     }
   }, [habit, setColor]);
 
@@ -107,6 +115,7 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
         placeholder="description"
         borderRadius="0 0 8px 8px"
         borderTop="0"
+        defaultValue={habit?.description}
         {...register('description')}
       />
 
@@ -179,7 +188,12 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
         </VStack>
         <VStack w="100%" alignItems="flex-start" ml={1}>
           <FormLabel>Time of Day</FormLabel>
-          <Select h="50px" mt={'2px !important'} {...register('timeOfDay', { required: true })}>
+          <Select
+            h="50px"
+            mt={'2px !important'}
+            {...register('timeOfDay', { required: true })}
+            defaultValue={habit?.timeOfDay}
+          >
             <option value="anytime">Anytime</option>
             <option value="early_morning">Early Morning</option>
             <option value="late_morning">Late Morning</option>
@@ -190,24 +204,29 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
         </VStack>
       </Flex>
 
-      {/* Repeat */}
-
       <Flex pt={4} alignItems="center" ml={1} justifyContent={'flex-end'}>
         {!repeat ? (
           <Box w="100%" mr="20px">
             <FormLabel>Date</FormLabel>
-
-            <Input type="date" />
+            <Input defaultValue={habit?.date} type="date" {...register('date')} />
           </Box>
         ) : (
           <></>
         )}
+
+        {/* Repeat */}
         <Flex pt={3} alignItems="center" ml={1}>
           <FormLabel>Repeat</FormLabel>
           <Switch
             colorScheme={findColorName(color)}
             isChecked={repeat}
-            onChange={(e) => setRepeat(e.target.checked)}
+            onChange={(e) => {
+              setRepeat(e.target.checked);
+
+              if (e.target.checked === false) {
+                setRecurrence({});
+              }
+            }}
           />
         </Flex>
       </Flex>
