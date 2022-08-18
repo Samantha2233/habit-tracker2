@@ -1,6 +1,15 @@
-import { objectType, inputObjectType, queryField, mutationField, arg, list, nonNull } from 'nexus';
+import {
+  objectType,
+  inputObjectType,
+  queryField,
+  mutationField,
+  arg,
+  list,
+  nonNull,
+  stringArg,
+} from 'nexus';
 
-import { isAdmin } from '@/services/permissions';
+// import { isAdmin } from '@/services/permissions';
 
 // Habit Type
 export const Habit = objectType({
@@ -83,7 +92,7 @@ export const createHabitMutation = mutationField('createHabit', {
 export const updateHabitMutation = mutationField('updateHabit', {
   type: 'Habit',
   description: 'Updates a Habit',
-  authorize: (_root, _args, ctx) => isAdmin(ctx.user),
+  // authorize: (_root, _args, ctx) => isAdmin(ctx.user),
   args: {
     where: nonNull(arg({ type: 'HabitWhereUniqueInput' })),
     data: nonNull(arg({ type: 'UpdateHabitInput' })),
@@ -94,6 +103,27 @@ export const updateHabitMutation = mutationField('updateHabit', {
     console.log('args', args);
 
     return await ctx.db.habit.update({ where, data });
+  },
+});
+
+export const deleteHabitMutation = mutationField('deleteHabit', {
+  type: 'Habit',
+  description: 'Deletes a Habit',
+  args: {
+    id: nonNull(stringArg()),
+  },
+  resolve: async (_root, args, ctx) => {
+    const { id } = args;
+
+    try {
+      await ctx.db.habit.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (e) {
+      throw new Error(`Error deleting habit: ${e}`);
+    }
   },
 });
 
@@ -130,13 +160,13 @@ export const UpdateHabitInput = inputObjectType({
 });
 
 // QUERY INPUTS
-export const HabitOrderByInput = inputObjectType({
-  name: 'HabitOrderByInput',
-  description: 'Order habit by a specific field',
-  definition(t) {
-    t.field('name', { type: 'SortOrder' });
-  },
-});
+// export const HabitOrderByInput = inputObjectType({
+//   name: 'HabitOrderByInput',
+//   description: 'Order habit by a specific field',
+//   definition(t) {
+//     t.field('name', { type: 'SortOrder' });
+//   },
+// });
 
 export const HabitWhereUniqueInput = inputObjectType({
   name: 'HabitWhereUniqueInput',
@@ -148,13 +178,13 @@ export const HabitWhereUniqueInput = inputObjectType({
   },
 });
 
-export const HabitWhereInput = inputObjectType({
-  name: 'HabitWhereInput',
-  description: 'Input to find habits based on other fields',
-  definition(t) {
-    t.field('name', { type: 'StringFilter' });
-  },
-});
+// export const HabitWhereInput = inputObjectType({
+//   name: 'HabitWhereInput',
+//   description: 'Input to find habits based on other fields',
+//   definition(t) {
+//     t.field('name', { type: 'StringFilter' });
+//   },
+// });
 
 export const HabitInput = inputObjectType({
   name: 'HabitInput',

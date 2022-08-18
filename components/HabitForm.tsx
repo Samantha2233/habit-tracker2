@@ -25,6 +25,7 @@ import { RecurrenceForm } from '@/components/RecurrenceForm';
 
 export interface HabitFormProps {
   onSubmit: (data: HabitInput) => Promise<void>;
+  onDelete: (id: string) => void;
   recurrence?: any;
   setRecurrence: any;
   color: string;
@@ -33,7 +34,14 @@ export interface HabitFormProps {
 }
 
 /** Description of component */
-export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: HabitFormProps) {
+export function HabitForm({
+  onSubmit,
+  onDelete,
+  setRecurrence,
+  color,
+  setColor,
+  habit,
+}: HabitFormProps) {
   const [icon] = useState('kitty');
   const [repeat, setRepeat] = useState(true);
 
@@ -252,8 +260,17 @@ export function HabitForm({ onSubmit, setRecurrence, color, setColor, habit }: H
         )}
       </Box>
 
-      <Flex justifyContent={'flex-end'}>
-        <Button type="submit" mt={5} mb={3} onClick={() => onSubmit(getValues())}>
+      <Flex justifyContent={habit ? 'space-between' : 'flex-end'} mt={7}>
+        {habit ? (
+          <Button
+            onClick={() => {
+              onDelete(habit.id);
+            }}
+          >
+            Delete Habit
+          </Button>
+        ) : null}
+        <Button type="submit" mb={3} onClick={() => onSubmit(getValues())}>
           {habit ? 'Update Habit' : 'Add Habit'}
         </Button>
       </Flex>
